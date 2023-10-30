@@ -10,6 +10,7 @@ import Koa from "koa";
 import helmet from "koa-helmet";
 import logger from "koa-logger";
 import Router from "koa-router";
+import session from "koa-session";
 import uniq from "lodash/uniq";
 import { AddressInfo } from "net";
 import stoppable from "stoppable";
@@ -83,6 +84,9 @@ async function start(id: number, disconnect: () => void) {
   }
 
   app.use(helmet());
+
+  app.keys = [env.UTILS_SECRET];
+  app.use(session({}, app));
 
   // catch errors in one place, automatically set status and response headers
   onerror(app);

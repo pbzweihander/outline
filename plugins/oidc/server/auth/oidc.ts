@@ -14,7 +14,6 @@ import passportMiddleware from "@server/middlewares/passport";
 import { User } from "@server/models";
 import { AuthenticationResult } from "@server/types";
 import {
-  StateStore,
   request,
   getTeamFromContext,
   getClientFromContext,
@@ -65,10 +64,8 @@ if (
         callbackURL: `${env.URL}/auth/${providerName}.callback`,
         passReqToCallback: true,
         scope: env.OIDC_SCOPES,
-        // @ts-expect-error custom state store
-        store: new StateStore(),
         state: true,
-        pkce: false,
+        pkce: true,
       },
       // OpenID Connect standard profile claims can be found in the official
       // specification.
@@ -91,7 +88,9 @@ if (
         try {
           if (!profile.email) {
             throw AuthenticationError(
-              `An email field was not returned in the profile parameter, but is required.`
+              `An email field was not returned in the profile parameter, but is required. ${JSON.stringify(
+                profile
+              )}`
             );
           }
           const team = await getTeamFromContext(ctx);
