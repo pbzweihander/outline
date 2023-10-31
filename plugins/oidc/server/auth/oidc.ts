@@ -88,9 +88,7 @@ if (
         try {
           if (!profile.email) {
             throw AuthenticationError(
-              `An email field was not returned in the profile parameter, but is required. ${JSON.stringify(
-                profile
-              )}`
+              `An email field was not returned in the profile parameter, but is required.`
             );
           }
           const team = await getTeamFromContext(ctx);
